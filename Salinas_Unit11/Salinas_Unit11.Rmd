@@ -1,0 +1,74 @@
+---
+title: "Salinas Unit11"
+author: "Diana Salinas"
+date: "10/19/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r load-library, include=FALSE}
+library(tidyverse)
+library(cowplot)
+library(socviz)
+library(knitr)
+library(kableExtra)
+
+```
+# US Colleges
+
+```{r college, echo=FALSE, warning=FALSE, message=FALSE}
+
+college <-  read_csv("data/college.csv", col_names = TRUE)
+
+college <- college %>%
+  mutate(state = as.factor(state),
+         region = as.factor(region),
+         highest_degree = as.factor(highest_degree),
+         control = as.factor(control),
+         gender = as.factor(gender),
+         loan_default_rate = as.numeric(loan_default_rate)) %>%
+  na.omit
+
+```
+
+### SAT Average v. Tuition
+
+```{r satAverage, echo=FALSE, warning=FALSE, message=FALSE}
+college %>%
+  ggplot() +
+  geom_point(mapping = aes(x=tuition,
+                           y=sat_avg, 
+                           color = tuition,
+                           #size = tuition,
+  ),
+  alpha = 0.25) +
+  scale_color_distiller(palette="Dark2") +
+  labs("SAT Average by Tuition",
+       x = "Tuition",
+       y = "SAT Average")
+
+
+```
+
+### College Tuition of Public v. Private Institutions
+
+```{r histogram, echo=FALSE, warning=FALSE, message=FALSE}
+#Histogram of college tuition by public v. private (control)
+college %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = tuition,
+                               fill = control))
+```
+
+### SAT Average of Public v. Private Instituions
+
+```{r sat, echo=FALSE, warning=FALSE, message=FALSE}
+# Now do for for SAT avg
+college %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = sat_avg,
+                               fill = control))
+
+```
