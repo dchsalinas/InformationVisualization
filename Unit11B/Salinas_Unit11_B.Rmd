@@ -1,0 +1,50 @@
+---
+title: "Unit11"
+author: "Diana Salinas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-library, include=FALSE, echo=FALSE}
+library(tidyverse)
+library(cowplot)
+library(socviz)
+library(knitr)
+library(kableExtra)
+library(leaflet)
+library(maps)
+library(htmltools)
+tinytex::install_tinytex()
+# tinytex::reinstall_tinytex()
+# tinytex:::is_install()
+
+```
+```{r landmarks, warning=FALSE, message=FALSE}
+#library(htmltools)
+
+ms_schools <- read.csv(textConnection(
+  "Name, Mascot, Lat, Long
+  Ole Miss, Landsharks, 34.3647, -89.5384
+  State, Bulldogs, 33.4552, -88.7944
+  Southern, Golden Eagles, 31.3299, -89.3335"
+))
+  
+msLabel <- sprintf("<b style=color:blue; style=font-size: 2px;>%s</b>
+                   <p style=color:blue>%s</p>", 
+            ms_schools$Name, ms_schools$Mascot) %>%
+            lapply(htmltools::HTML)
+  
+  ms_schools %>%
+  leaflet(options=leafletOptions(zoomSnap=0.1)) %>%
+  setView(lng=-89.3985, lat=32.3547, zoom=5.5) %>%
+    addTiles() %>%
+    addMarkers (~Long, ~Lat, popup=msLabel, label=msLabel)
+
+```
+
+
+
